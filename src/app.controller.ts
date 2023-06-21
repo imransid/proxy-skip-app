@@ -18,7 +18,6 @@ export class AppController {
 
   @Get('get-all-issue')
   async getAllIssue(@Body() props: any): Promise<any> {
-    console.log('props', props);
     let host = 'https://pm23.atlassian.net';
     let email = 'Minhazul.Hasan@brainstation-23.com';
     let apiToken =
