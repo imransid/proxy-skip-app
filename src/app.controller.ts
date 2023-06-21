@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Delete } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Version3Client } from 'jira.js';
 import { TrelloClient } from 'trello.js';
@@ -18,13 +18,11 @@ export class AppController {
 
   @Get('get-all-issue')
   async getAllIssue(@Body() props: any): Promise<any> {
-    let host = 'https://pm23.atlassian.net';
-    let email = 'Minhazul.Hasan@brainstation-23.com';
-    let apiToken =
-      'ATATT3xFfGF05HZoqPQ0ZjhHjze6RGAsPhH3rq5I_1Iv8Ykh8t2D7Nw4wpihOjRN_DtF9JDHGrdFJmRqPPEmEviVlKcDOUKN_XSu11ewD0mp_bge176xIfe3uiygrH49_1-aL-GTqHEI3vH8rQDqflXJvOjD7x4F3_1Z5OO3721D3chh6nnyFfY=F30F0A40';
+    let email = props.email;
+    let apiToken = props.token;
 
     const client = new Version3Client({
-      host: 'https://ari-us.atlassian.net/',
+      host: props.url,
       authentication: {
         basic: {
           email: email,
@@ -42,12 +40,11 @@ export class AppController {
 
   @Post('create-issue')
   async createProjectIssue(@Body() props: any): Promise<any> {
-    let email = 'Minhazul.Hasan@brainstation-23.com';
-    let apiToken =
-      'ATATT3xFfGF05HZoqPQ0ZjhHjze6RGAsPhH3rq5I_1Iv8Ykh8t2D7Nw4wpihOjRN_DtF9JDHGrdFJmRqPPEmEviVlKcDOUKN_XSu11ewD0mp_bge176xIfe3uiygrH49_1-aL-GTqHEI3vH8rQDqflXJvOjD7x4F3_1Z5OO3721D3chh6nnyFfY=F30F0A40';
+    let email = props.email;
+    let apiToken = props.token;
 
     const client = new Version3Client({
-      host: 'https://ari-us.atlassian.net/',
+      host: props.url,
       authentication: {
         basic: {
           email: email,
@@ -59,7 +56,7 @@ export class AppController {
     // create Issue
     const { id } = await client.issues.createIssue({
       fields: {
-        summary: 'My first issue',
+        summary: props.summary,
         issuetype: {
           name: 'Task',
         },
@@ -76,12 +73,11 @@ export class AppController {
 
   @Post('update-issue')
   async updateProjectIssue(@Body() props: any): Promise<any> {
-    let email = 'Minhazul.Hasan@brainstation-23.com';
-    let apiToken =
-      'ATATT3xFfGF05HZoqPQ0ZjhHjze6RGAsPhH3rq5I_1Iv8Ykh8t2D7Nw4wpihOjRN_DtF9JDHGrdFJmRqPPEmEviVlKcDOUKN_XSu11ewD0mp_bge176xIfe3uiygrH49_1-aL-GTqHEI3vH8rQDqflXJvOjD7x4F3_1Z5OO3721D3chh6nnyFfY=F30F0A40';
+    let email = props.email;
+    let apiToken = props.token;
 
     const client = new Version3Client({
-      host: 'https://ari-us.atlassian.net/',
+      host: props.url,
       authentication: {
         basic: {
           email: email,
@@ -103,13 +99,11 @@ export class AppController {
 
   @Post('change-issue-status')
   async changeIssueStatus(@Body() props: any): Promise<any> {
-    let host = 'https://pm23.atlassian.net';
-    let email = 'Minhazul.Hasan@brainstation-23.com';
-    let apiToken =
-      'ATATT3xFfGF05HZoqPQ0ZjhHjze6RGAsPhH3rq5I_1Iv8Ykh8t2D7Nw4wpihOjRN_DtF9JDHGrdFJmRqPPEmEviVlKcDOUKN_XSu11ewD0mp_bge176xIfe3uiygrH49_1-aL-GTqHEI3vH8rQDqflXJvOjD7x4F3_1Z5OO3721D3chh6nnyFfY=F30F0A40';
+    let email = props.email;
+    let apiToken = props.token;
 
     const client = new Version3Client({
-      host: 'https://ari-us.atlassian.net/',
+      host: props.url,
       authentication: {
         basic: {
           email: email,
@@ -119,7 +113,7 @@ export class AppController {
     });
 
     const transitions = await client.issues.getTransitions({
-      issueIdOrKey: props.id,
+      issueIdOrKey: props.key,
     });
 
     // Find the transition ID for the "Done" status
@@ -129,7 +123,7 @@ export class AppController {
     const transitionId = doneTransition.id;
 
     await client.issues.doTransition({
-      issueIdOrKey: props.id,
+      issueIdOrKey: props.key,
       transition: {
         id: transitionId,
       },
@@ -138,15 +132,13 @@ export class AppController {
     return transitionId;
   }
 
-  @Post('get-all-project')
-  async testJiraConnect(): Promise<any> {
-    let host = 'https://pm23.atlassian.net';
-    let email = 'Minhazul.Hasan@brainstation-23.com';
-    let apiToken =
-      'ATATT3xFfGF05HZoqPQ0ZjhHjze6RGAsPhH3rq5I_1Iv8Ykh8t2D7Nw4wpihOjRN_DtF9JDHGrdFJmRqPPEmEviVlKcDOUKN_XSu11ewD0mp_bge176xIfe3uiygrH49_1-aL-GTqHEI3vH8rQDqflXJvOjD7x4F3_1Z5OO3721D3chh6nnyFfY=F30F0A40';
+  @Get('get-all-project')
+  async testJiraConnect(@Body() props: any): Promise<any> {
+    let email = props.email;
+    let apiToken = props.token;
 
     const client = new Version3Client({
-      host: 'https://ari-us.atlassian.net/',
+      host: props.url,
       authentication: {
         basic: {
           email: email,
@@ -163,5 +155,32 @@ export class AppController {
     //   projectIdOrKey: projects[1].id.toString(),
     // });
     return projects;
+  }
+
+  @Delete('delete-issue')
+  async deleteIssue(@Body() props: any): Promise<any> {
+    let email = props.email;
+    let apiToken = props.token;
+
+    const client = new Version3Client({
+      host: props.url,
+      authentication: {
+        basic: {
+          email: email,
+          apiToken: apiToken,
+        },
+      },
+    });
+
+    // Specify the issue key or ID to be deleted
+    const issueKeyOrId = props.key;
+
+    // Delete the issue
+    const deletionResponse = await client.issues.deleteIssue({
+      issueIdOrKey: issueKeyOrId,
+    });
+
+    // Return the deletion response
+    return deletionResponse;
   }
 }
