@@ -16,7 +16,7 @@ export class AppController {
     return this.appService.createIssue(createData);
   }
 
-  @Get('get-all-issue')
+  @Post('get-all-issue')
   async getAllIssue(@Body() props: any): Promise<any> {
     let email = props.email;
     let apiToken = props.token;
@@ -132,7 +132,7 @@ export class AppController {
     return transitionId;
   }
 
-  @Get('get-all-project')
+  @Post('get-all-project')
   async testJiraConnect(@Body() props: any): Promise<any> {
     let email = props.email;
     let apiToken = props.token;
