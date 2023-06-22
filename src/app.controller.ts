@@ -183,4 +183,34 @@ export class AppController {
     // Return the deletion response
     return deletionResponse;
   }
+
+  @Post('get-assigner')
+  async getAllUserConnect(@Body() props: any): Promise<any> {
+    let email = props.email;
+    let apiToken = props.token;
+
+    const client = new Version3Client({
+      host: props.url,
+      authentication: {
+        basic: {
+          email: email,
+          apiToken: apiToken,
+        },
+      },
+    });
+
+    // get all users
+    let users = client.users.getAllUsers();
+
+    // .findAssignableUsers({ project: projectKey })
+    // .then((response) => {
+    //   const assignableUsers = response.values;
+    //   console.log('Assignable Users:', assignableUsers);
+    // })
+    // .catch((error) => {
+    //   console.error('Error finding assignable users:', error);
+    // });
+
+    return users;
+  }
 }
