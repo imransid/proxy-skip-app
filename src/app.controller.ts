@@ -213,4 +213,37 @@ export class AppController {
 
     return users;
   }
+
+  @Post('set-assigner')
+  async setAssigner(@Body() props: any): Promise<any> {
+    let email = props.email;
+    let apiToken = props.token;
+
+    const client = new Version3Client({
+      host: props.url,
+      authentication: {
+        basic: {
+          email: email,
+          apiToken: apiToken,
+        },
+      },
+    });
+
+    // Define the user account ID or email of the assignee
+    const assignee = props.assignee; // Replace with the assignee's account ID or email
+
+    // Make the API request to assign the issue
+    let res = client.issues
+      .assignIssue({ issueIdOrKey: props.key, accountId: assignee })
+      .then(() => {
+        return true;
+        console.log('Issue assigned successfully.');
+      })
+      .catch((error) => {
+        return false;
+        console.error('Error assigning issue:', error);
+      });
+
+    return res;
+  }
 }
