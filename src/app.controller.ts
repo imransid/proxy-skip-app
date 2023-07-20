@@ -8,7 +8,9 @@ export class AppController {
 
   @Get()
   getJira(): any {
-    return this.appService.getJira();
+
+    return "hello proxy";
+    //return this.appService.getJira();
   }
 
   @Post()
